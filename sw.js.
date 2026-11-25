@@ -1,0 +1,40 @@
+
+self.addEventListener("install", event => {
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", event => {
+  event.waitUntil(self.clients.claim());
+});
+
+self.addEventListener("push", event => {
+  let data = {
+    title: "TIE Bilbao Bot",
+    body: "Nouvelle information sur les rendez-vous."
+  };
+
+  try {
+    if (event.data) {
+      data = { ...data, ...event.data.json() };
+    }
+  } catch (error) {}
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      data: {
+        url: "https://icp.administracionelectronica.gob.es/icpplus/index.html"
+      }
+    })
+  );
+});
+
+self.addEventListener("notificationclick", event => {
+  event.notification.close();
+
+  event.waitUntil(
+    clients.openWindow(
+      "https://icp.administracionelectronica.gob.es/icpplus/index.html"
+    )
+  );
+});
