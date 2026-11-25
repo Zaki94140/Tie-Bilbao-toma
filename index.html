@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123b5d">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>TIE Bilbao Bot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f6f9;
+      color: #183044;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    header, section {
+      padding: 20px;
+      margin-bottom: 16px;
+      border-radius: 15px;
+      background: white;
+    }
+    header {
+      background: #123b5d;
+      color: white;
+    }
+    button, a {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin: 12px 0;
+      border: 0;
+      border-radius: 10px;
+      background: #12649a;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    #status {
+      padding: 12px;
+      background: #fff4d9;
+      border-radius: 10px;
+      line-height: 1.5;
+    }
+    p { line-height: 1.5; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🖐️ TIE Bilbao Bot</h1>
+  <p>Assistant de rendez-vous TIE</p>
+</header>
+
+<section>
+  <div id="status">Notifications pas encore configurées.</div>
+
+  <h2>Votre recherche</h2>
+  <p>📍 CNP Bilbao — Gordóniz 8, Bizkaia</p>
+  <p>📄 Première expédition de TIE — prise d'empreintes</p>
+  <p>🎯 Chercher le premier rendez-vous disponible</p>
+
+  <button id="notify">Activer les notifications</button>
+  <button id="test">Tester les notifications</button>
+
+  <a href="https://icp.administracionelectronica.gob.es/icpplus/index.html">
+    Ouvrir le portail officiel
+  </a>
+</section>
+
+<section>
+  <h2>État du service</h2>
+  <p>
+    L'application est en cours de configuration.
+    La surveillance des rendez-vous et les alertes
+    réelles ne sont pas encore activées.
+  </p>
+  <p>
+    Aucun rendez-vous n'est réservé automatiquement.
+  </p>
+</section>
+
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js")
+    .catch(error => console.log(error));
+}
+
+const status = document.getElementById("status");
+
+document.getElementById("notify").onclick = async () => {
+  if (!("Notification" in window)) {
+    status.textContent = "Notifications non prises en charge.";
+    return;
+  }
+
+  const permission = await Notification.requestPermission();
+
+  status.textContent = permission === "granted"
+    ? "Notifications autorisées !"
+    : "Notifications non autorisées.";
+};
+
+document.getElementById("test").onclick = async () => {
+  if (!("Notification" in window) ||
+      Notification.permission !== "granted") {
+    status.textContent = "Autorise d'abord les notifications.";
+    return;
+  }
+
+  const registration = await navigator.serviceWorker.ready;
+
+  await registration.showNotification("TIE Bilbao Bot", {
+    body: "La notification de test fonctionne !"
+  });
+};
+</script>
+
+</body>
+</html>
