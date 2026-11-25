@@ -1,0 +1,12 @@
+
+{
+  "name": "TIE Bilbao Bot",
+  "short_name": "TIE Bilbao",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f2f6f9",
+  "theme_color": "#123b5d",
+  "description": "Assistant de rendez-vous TIE à Bilbao"
+}
